@@ -1,10 +1,12 @@
 package com.tpdan.mspedidos.service.impl;
 
+import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
 import com.tpdan.mspedidos.repository.DetallePedidoRepository;
 import com.tpdan.mspedidos.repository.PedidoRepository;
 import com.tpdan.mspedidos.service.PedidoService;
+import com.tpdan.mspedidos.validator.PedidoValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +17,12 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final DetallePedidoRepository detallePedidoRepository;
+    private final PedidoValidator pedidoValidator;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository, DetallePedidoRepository detallePedidoRepository){
+    public PedidoServiceImpl(PedidoRepository pedidoRepository, DetallePedidoRepository detallePedidoRepository, PedidoValidator pedidoValidator){
         this.pedidoRepository = pedidoRepository;
         this.detallePedidoRepository = detallePedidoRepository;
+        this.pedidoValidator = pedidoValidator;
     }
 
     @Override
@@ -56,60 +60,53 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Pedido crearPedido(Pedido nuevoPedido) {
-        //TODO validaciones
+    public Pedido crearPedido(Pedido nuevoPedido) throws BusinessRuleException {
+        pedidoValidator.validarCreacion(nuevoPedido);
         return pedidoRepository.save(nuevoPedido);
     }
 
     @Override
-    public DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) {
-        Optional<Pedido> pedidoOptional = pedidoRepository.findById(id);
-        //TODO validar crear detalle
-        if(pedidoOptional.isPresent()){
-            nuevoDetallePedido.setPedido(pedidoOptional.get());
-            nuevoDetallePedido = detallePedidoRepository.save(nuevoDetallePedido);
-            //TODO setear el producto
-            return nuevoDetallePedido;
-        }
-        return null;
+    public DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) throws BusinessRuleException{
+        pedidoValidator.validarCreacionDetalle(nuevoDetallePedido, id);
+        nuevoDetallePedido.setPedido(buscarPedidoPorId(id).get());
+        nuevoDetallePedido = detallePedidoRepository.save(nuevoDetallePedido);
+        //TODO setear el producto
+        return nuevoDetallePedido;
     }
 
     @Override
-    public Pedido actualizarPedido(Pedido nuevoPedido) {
+    public Pedido actualizarPedido(Pedido nuevoPedido) throws BusinessRuleException {
+        pedidoValidator.validarActualizarPedido(nuevoPedido);
         return pedidoRepository.save(nuevoPedido);
     }
 
     @Override
-    public DetallePedido actualizarDetallePedido(DetallePedido nuevoDetalle, Integer idPedido) {
-        Optional<Pedido> pedidoOptional = pedidoRepository.findById(idPedido);
-        //TODO validar actualizar detalle
-        if(pedidoOptional.isPresent()){
-            nuevoDetalle.setPedido(pedidoOptional.get());
-            nuevoDetalle = detallePedidoRepository.save(nuevoDetalle);
-            //TODO buscar el producto
-            return nuevoDetalle;
-        }
-        return null;
+    public DetallePedido actualizarDetallePedido(DetallePedido nuevoDetalle, Integer idPedido) throws BusinessRuleException{
+        pedidoValidator.validarActualizarDetallePedido(nuevoDetalle, idPedido);
+        nuevoDetalle.setPedido(buscarPedidoPorId(idPedido).get());
+        nuevoDetalle = detallePedidoRepository.save(nuevoDetalle);
+        //TODO buscar el producto
+        return nuevoDetalle;
     }
 
     @Override
-    public Optional<Pedido> actualizarEstadoPedido(Integer id, String estado) {
-
-        return Optional.empty();
+    public Pedido confirmarPedido(Integer id) throws BusinessRuleException {
+        pedidoValidator.validarConfirmacion(id);
+        Pedido pedido = buscarPedidoPorId(id).get();
+        //TODO verificar stocks
+        //TODO verificar saldo deudor
+        return pedidoRepository.save(pedido);
     }
 
     @Override
-    public void borrarPedido(Integer id) {
-        //TODO validar borrar pedido
+    public void borrarPedido(Integer id) throws BusinessRuleException {
+        pedidoValidator.validarBorrarPedido(id);
         pedidoRepository.deleteById(id);
     }
 
     @Override
-    public void borrarDetallePedido(Integer idPedido, Integer id) {
-        Optional<Pedido> pedidoOptional = pedidoRepository.findById(idPedido);
-        //TODO validar borrar detalle
-        if(pedidoOptional.isPresent()){
-            detallePedidoRepository.deleteById(id);
-        }
+    public void borrarDetallePedido(Integer idPedido, Integer id) throws BusinessRuleException {
+        pedidoValidator.validarBorrarDetallePedido(idPedido, id);
+        detallePedidoRepository.deleteById(id);
     }
 }

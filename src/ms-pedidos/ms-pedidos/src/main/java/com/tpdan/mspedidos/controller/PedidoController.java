@@ -1,5 +1,6 @@
 package com.tpdan.mspedidos.controller;
 
+import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
 import com.tpdan.mspedidos.service.PedidoService;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pedido")
@@ -50,42 +50,38 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Pedido> crearPedido(@RequestBody Pedido nuevoPedido){
-        //TODO hacer la correcta validacion
-        if(nuevoPedido.getObra()!=null && nuevoPedido.getObraId()!=null && nuevoPedido.getDetallePedido()!=null && !nuevoPedido.getDetallePedido().isEmpty() && nuevoPedido.getDetallePedido().stream().allMatch(detallePedido -> detallePedido.getProductoId()!=null && detallePedido.getProducto()!=null && detallePedido.getCantidad()!=null)){
-            return new ResponseEntity<>(pedidoService.crearPedido(nuevoPedido), HttpStatus.CREATED);
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<Pedido> crearPedido(@RequestBody Pedido nuevoPedido) throws BusinessRuleException {
+        return new ResponseEntity<>(pedidoService.crearPedido(nuevoPedido), HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/detalle")
-    public ResponseEntity<DetallePedido> crearDetallePedido(@RequestBody DetallePedido nuevoDetallePedido, @PathVariable Integer id){
+    public ResponseEntity<DetallePedido> crearDetallePedido(@RequestBody DetallePedido nuevoDetallePedido, @PathVariable Integer id) throws BusinessRuleException{
         return new ResponseEntity<>(pedidoService.crearDetallePedido(nuevoDetallePedido, id), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Pedido> actualizarPedido(@RequestBody Pedido nuevoPedido){
+    public ResponseEntity<Pedido> actualizarPedido(@RequestBody Pedido nuevoPedido) throws BusinessRuleException{
         return ResponseEntity.ok(pedidoService.actualizarPedido(nuevoPedido));
     }
 
     @PutMapping("/{idPedido}/detallePedido")
-    public ResponseEntity<DetallePedido> actualizarDetallePedido(@RequestBody DetallePedido nuevoDetalle, @PathVariable Integer idPedido){
+    public ResponseEntity<DetallePedido> actualizarDetallePedido(@RequestBody DetallePedido nuevoDetalle, @PathVariable Integer idPedido) throws BusinessRuleException{
         return ResponseEntity.ok(pedidoService.actualizarDetallePedido(nuevoDetalle, idPedido));
     }
 
-    @PatchMapping("/{id}/actualizar-estado")
-    public ResponseEntity<Pedido> actualizarEstadoPedido(@PathVariable(name = "id") Integer id, @RequestParam(name = "estado") String estado){
-        return ResponseEntity.of(pedidoService.actualizarEstadoPedido(id, estado));
+    @PatchMapping("/{id}/confirmar")
+    public ResponseEntity<Pedido> confirmarPedido(@PathVariable(name = "id") Integer id) throws BusinessRuleException{
+        return ResponseEntity.ok(pedidoService.confirmarPedido(id));
     }
 
     @DeleteMapping("/{id}")
-    public HttpStatus borrarPedido(@PathVariable Integer id){
+    public HttpStatus borrarPedido(@PathVariable Integer id) throws BusinessRuleException{
         pedidoService.borrarPedido(id);
         return HttpStatus.NO_CONTENT;
     }
 
     @DeleteMapping("/{idPedido}/detalle/{id}")
-    public HttpStatus borrarDetallePedido(@PathVariable Integer idPedido, @PathVariable Integer id){
+    public HttpStatus borrarDetallePedido(@PathVariable Integer idPedido, @PathVariable Integer id) throws BusinessRuleException{
         pedidoService.borrarDetallePedido(idPedido,id);
         return HttpStatus.NO_CONTENT;
     }

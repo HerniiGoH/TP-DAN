@@ -1,5 +1,6 @@
 package com.tpdan.mspedidos.service;
 
+import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
 
@@ -13,11 +14,11 @@ public interface PedidoService {
     Optional<List<Pedido>> buscarPedidosPorCliente(Integer id, String cuit);
     Optional<List<Pedido>> buscarPedidosPorEstado(String estado);
     Optional<DetallePedido> buscarDetallePedidoPorId(Integer idPedido, Integer id);
-    Pedido crearPedido(Pedido nuevoPedido);
-    DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id);
-    Pedido actualizarPedido(Pedido nuevoPedido);
-    DetallePedido actualizarDetallePedido(DetallePedido nuevoDetalle, Integer idPedido);
-    Optional<Pedido> actualizarEstadoPedido(Integer id, String estado);
-    void borrarPedido(Integer id);
-    void borrarDetallePedido(Integer idPedido, Integer id);
+    Pedido crearPedido(Pedido nuevoPedido) throws BusinessRuleException;
+    DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) throws BusinessRuleException;
+    Pedido actualizarPedido(Pedido nuevoPedido) throws BusinessRuleException;
+    DetallePedido actualizarDetallePedido(DetallePedido nuevoDetalle, Integer idPedido) throws BusinessRuleException;
+    Pedido confirmarPedido(Integer id) throws BusinessRuleException;
+    void borrarPedido(Integer id) throws BusinessRuleException;
+    void borrarDetallePedido(Integer idPedido, Integer id) throws BusinessRuleException;
 }
