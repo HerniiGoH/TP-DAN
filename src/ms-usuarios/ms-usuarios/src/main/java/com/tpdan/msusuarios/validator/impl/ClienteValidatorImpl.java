@@ -1,12 +1,10 @@
 package com.tpdan.msusuarios.validator.impl;
 
-import com.tpdan.msusuarios.exceptions.BusinessRuleException;
-import com.tpdan.msusuarios.exceptions.ClienteInexistenteException;
-import com.tpdan.msusuarios.exceptions.ClienteSinObrasException;
-import com.tpdan.msusuarios.exceptions.ClienteSinTipoDeObraException;
+import com.tpdan.msusuarios.exceptions.*;
 import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.model.Obra;
 import com.tpdan.msusuarios.service.ClienteService;
+import com.tpdan.msusuarios.service.PedidoService;
 import com.tpdan.msusuarios.validator.ClienteValidator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -17,9 +15,12 @@ import java.util.Optional;
 public class ClienteValidatorImpl implements ClienteValidator {
 
     private final ClienteService clienteService;
+    private final PedidoService pedidoService;
 
-    public ClienteValidatorImpl(@Lazy ClienteService clienteService){
+    public ClienteValidatorImpl(@Lazy ClienteService clienteService,
+                                PedidoService pedidoService){
         this.clienteService = clienteService;
+        this.pedidoService = pedidoService;
     }
 
     @Override
@@ -44,6 +45,8 @@ public class ClienteValidatorImpl implements ClienteValidator {
             throw new ClienteInexistenteException();
         }
 
-        //TODO validar que no tenga pedidos
+        if(pedidoService.buscarPedidosPorCliente(id, cliente.get().getCuit()).isEmpty()){
+            throw new ClienteConPedidosException();
+        }
     }
 }

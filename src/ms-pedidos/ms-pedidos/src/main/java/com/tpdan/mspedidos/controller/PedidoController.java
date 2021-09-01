@@ -20,32 +20,32 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pedido>> buscarTodos() {
+    public ResponseEntity<List<Pedido>> buscarTodos() throws BusinessRuleException {
         return ResponseEntity.ok(pedidoService.buscarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> buscarPedidoPorId(@PathVariable Integer id) {
+    public ResponseEntity<Pedido> buscarPedidoPorId(@PathVariable Integer id) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarPedidoPorId(id));
     }
 
     @GetMapping("/obra/{id}")
-    public ResponseEntity<List<Pedido>> buscarPedidosPorIdObra(@PathVariable Integer id){
+    public ResponseEntity<List<Pedido>> buscarPedidosPorIdObra(@PathVariable Integer id) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarPedidosPorIdObra(id));
     }
 
     @GetMapping("/cliente")
-    public ResponseEntity<List<Pedido>> buscarPedidosPorCliente(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "cuit") String cuit){
+    public ResponseEntity<List<Pedido>> buscarPedidosPorCliente(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "cuit") String cuit) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarPedidosPorCliente(id, cuit));
     }
 
     @GetMapping("/estado")
-    public ResponseEntity<List<Pedido>> buscarPedidosPorEstado(@RequestParam(name = "estado") String estado){
+    public ResponseEntity<List<Pedido>> buscarPedidosPorEstado(@RequestParam(name = "estado") String estado) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarPedidosPorEstado(estado));
     }
 
     @GetMapping("/{idPedido}/detalle/{id}")
-    public ResponseEntity<DetallePedido> buscarDetallePedidoPorId(@PathVariable Integer idPedido, @PathVariable Integer id){
+    public ResponseEntity<DetallePedido> buscarDetallePedidoPorId(@PathVariable Integer idPedido, @PathVariable Integer id) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarDetallePedidoPorId(idPedido, id));
     }
 
