@@ -20,8 +20,8 @@ public class ObraServiceImpl implements ObraService {
     }
 
     @Override
-    public List<Obra> buscarTodas() {
-        return obraRepository.findAll();
+    public List<Obra> buscarTodas(List<Integer> ids) {
+        return ids!=null ? obraRepository.findAllByIdIsIn(ids) : obraRepository.findAll();
     }
 
     @Override
@@ -32,6 +32,11 @@ public class ObraServiceImpl implements ObraService {
     @Override
     public Optional<List<Obra>> buscarObra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoObra, Cliente cliente) {
         return obraRepository.findAllByQuery(id, descripcion, latitud, longitud, direccion, superficie, tipoObra, cliente);
+    }
+
+    @Override
+    public Optional<List<Obra>> buscarObraPorCliente(Integer id, String cuit) {
+        return obraRepository.buscarObraPorCliente(id, cuit);
     }
 
     @Override

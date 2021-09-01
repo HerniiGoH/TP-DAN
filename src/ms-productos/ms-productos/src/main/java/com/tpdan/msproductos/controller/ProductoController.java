@@ -18,8 +18,8 @@ public class ProductoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Producto>> buscarTodos(){
-        return ResponseEntity.ok(productoService.buscarTodos());
+    public ResponseEntity<List<Producto>> buscarTodos(@RequestParam(required = false) List<Integer>ids){
+        return ResponseEntity.ok(productoService.buscarTodos(ids));
     }
 
     @GetMapping("/{id}")
@@ -36,6 +36,8 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> buscarProductosSinStock(@RequestParam List<Integer> ids, @RequestParam List<Integer> cantidades){
         return ResponseEntity.ok(productoService.buscarProductosSinStock(ids, cantidades));
     }
+    
+    @GetMapping("")
 
     @PostMapping
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto){

@@ -24,8 +24,8 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<Producto> buscarTodos() {
-        return productoRepository.findAll();
+    public List<Producto> buscarTodos(List<Integer> ids) {
+        return ids!=null ? productoRepository.findAllByIdIsIn(ids) : productoRepository.findAll();
     }
 
     @Override

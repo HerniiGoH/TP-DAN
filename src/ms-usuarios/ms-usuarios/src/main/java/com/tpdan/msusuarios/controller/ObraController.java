@@ -20,8 +20,8 @@ public class ObraController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Obra>> buscarTodas(){
-        return ResponseEntity.ok(obraService.buscarTodas());
+    public ResponseEntity<List<Obra>> buscarTodas(@RequestParam(required = false) List<Integer> ids){
+        return ResponseEntity.ok(obraService.buscarTodas(ids));
     }
 
     @GetMapping("/{id}")
@@ -32,6 +32,11 @@ public class ObraController {
     @GetMapping("/obra")
     public ResponseEntity<List<Obra>>buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false) JsonWrapper jsonWrapper){
         return ResponseEntity.of(obraService.buscarObra(id, descripcion, latitud, longitud, direccion, superficie, jsonWrapper.getTipoObra(), jsonWrapper.getCliente()));
+    }
+
+    @GetMapping("/obra/cliente")
+    public ResponseEntity<List<Obra>>buscarObraPorCliente(@RequestParam(required = false) Integer id, @RequestParam(required = false) String cuit){
+        return ResponseEntity.of(obraService.buscarObraPorCliente(id, cuit));
     }
 
     @PostMapping
