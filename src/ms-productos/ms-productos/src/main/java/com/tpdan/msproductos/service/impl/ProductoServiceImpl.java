@@ -7,9 +7,9 @@ import com.tpdan.msproductos.repository.ProvisionRepository;
 import com.tpdan.msproductos.service.ProductoService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -50,10 +50,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public List<Producto> buscarProductosSinStock(List<Integer> ids, List<Integer> cantidades) {
-        List<Producto> productosSinStock = new ArrayList<>();
-        for (int i = 0; i < ids.size(); i++) {
-            productoRepository.buscarProductoSinStock(ids.get(i), cantidades.get(i)).ifPresent(productosSinStock::add);
-        }
-        return productosSinStock;
+        List<Producto> productosSinStock = productoRepository.findAllByIdIsIn(ids);
+        return productosSinStock.stream().filter(producto -> producto.getStockActual()<cantidades.get(productosSinStock.indexOf(producto))).collect(Collectors.toUnmodifiableList());
     }
 }

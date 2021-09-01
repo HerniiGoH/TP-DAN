@@ -37,11 +37,3 @@ CREATE TABLE movimientos_stock
     CONSTRAINT fk_producto_movimientos_stock FOREIGN KEY (producto_id) REFERENCES producto (id),
     CONSTRAINT fk_provision_detalle_movimientos_stock FOREIGN KEY (provision_detalle_id) REFERENCES provision_detalle (id)
 );
-
-INSERT INTO unidad (descripcion)
-VALUES ('Kg'),
-       ('g'),
-       ('l'),
-       ('ml'),
-       ('ton'),
-       ('unidad')
