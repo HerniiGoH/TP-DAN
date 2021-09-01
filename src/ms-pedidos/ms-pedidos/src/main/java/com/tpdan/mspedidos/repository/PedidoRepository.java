@@ -17,4 +17,5 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     Optional<List<Pedido>> findByIdObra(Integer idObra);
     @Query(value = "SELECT p FROM Pedido p WHERE (:estado = p.estadoPedido)")
     Optional<List<Pedido>> buscarPedidoPorEstado(String estado);
+    Optional<List<Pedido>> findPedidosByObraIdIsIn(List<Integer> ids);
 }

@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PedidoService {
-    List<Pedido> buscarTodos();
-    Optional<Pedido> buscarPedidoPorId(Integer id);
-    Optional<List<Pedido>> buscarPedidosPorIdObra(Integer id);
-    Optional<List<Pedido>> buscarPedidosPorCliente(Integer id, String cuit);
-    Optional<List<Pedido>> buscarPedidosPorEstado(String estado);
-    Optional<DetallePedido> buscarDetallePedidoPorId(Integer idPedido, Integer id);
+    List<Pedido> buscarTodos() throws BusinessRuleException;
+    Optional<Pedido> buscarPedidoPorId(Integer id) throws BusinessRuleException;
+    Optional<List<Pedido>> buscarPedidosPorIdObra(Integer id) throws BusinessRuleException;
+    Optional<List<Pedido>> buscarPedidosPorCliente(Integer id, String cuit) throws BusinessRuleException;
+    Optional<List<Pedido>> buscarPedidosPorEstado(String estado) throws BusinessRuleException;
+    Optional<DetallePedido> buscarDetallePedidoPorId(Integer idPedido, Integer id) throws BusinessRuleException;
     Pedido crearPedido(Pedido nuevoPedido) throws BusinessRuleException;
     DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) throws BusinessRuleException;
     Pedido actualizarPedido(Pedido nuevoPedido) throws BusinessRuleException;

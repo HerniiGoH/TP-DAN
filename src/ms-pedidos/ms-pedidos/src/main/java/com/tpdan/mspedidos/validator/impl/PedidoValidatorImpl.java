@@ -23,14 +23,14 @@ public class PedidoValidatorImpl implements PedidoValidator {
 
     @Override
     public void validarCreacion(Pedido pedido) throws BusinessRuleException {
-        if(pedido.getObraId() == null){
+        if(pedido.getObraId() == null || pedido.getObra() == null){
             throw new PedidoSinObraException();
         }
         if(pedido.getDetallePedido() == null || pedido.getDetallePedido().isEmpty()){
             throw new PedidoSinDetalleException();
         }
         for(DetallePedido detallePedido : pedido.getDetallePedido()){
-            if(detallePedido.getProductoId()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
+            if(detallePedido.getProductoId()==null || detallePedido.getProducto()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
                 throw new DetalleSinProductosException();
             }
         }
@@ -45,7 +45,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(!pedidoOptional.get().getEstadoPedido().equals(EstadoPedido.NUEVO)){
             throw new PedidoNoModificableException();
         }
-        if(detallePedido.getProductoId()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
+        if(detallePedido.getProductoId()==null || detallePedido.getProducto()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
             throw new DetalleSinProductosException();
         }
     }
@@ -66,7 +66,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(!pedidoOptional.get().getEstadoPedido().equals(EstadoPedido.NUEVO)){
             throw new PedidoNoModificableException();
         }
-        if(detallePedido.getProductoId()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
+        if(detallePedido.getProductoId()==null || detallePedido.getProducto()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
             throw new DetalleSinProductosException();
         }
     }
