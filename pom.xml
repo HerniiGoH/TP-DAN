@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>src/ms-usuarios/ms-usuarios</module>
-        <module>src/ms-pedidos/ms-pedidos</module>
-        <module>src/ms-productos/ms-productos</module>
-        <module>src/ms-pagos/ms-pagos</module>
+        <module>src/ms-usuarios</module>
+        <module>src/ms-pedidos</module>
+        <module>src/ms-productos</module>
+        <module>src/ms-pagos</module>
     </modules>
 
 </project>
