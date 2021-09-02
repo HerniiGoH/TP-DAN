@@ -6,6 +6,7 @@ import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
 import com.tpdan.mspedidos.model.dto.Obra;
 import com.tpdan.mspedidos.model.dto.Producto;
+import com.tpdan.mspedidos.model.enumerations.EstadoPedido;
 import com.tpdan.mspedidos.repository.DetallePedidoRepository;
 import com.tpdan.mspedidos.repository.PedidoRepository;
 import com.tpdan.mspedidos.service.ClienteService;
@@ -124,10 +125,9 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) throws BusinessRuleException{
-        pedidoValidator.validarCreacionDetalle(nuevoDetallePedido, id);
-        nuevoDetallePedido.setPedido(buscarPedidoPorId(id).get());
-        nuevoDetallePedido = detallePedidoRepository.save(nuevoDetallePedido);
-        return nuevoDetallePedido;
+        Pedido pedido = pedidoValidator.validarCreacionDetalle(nuevoDetallePedido, id);
+        nuevoDetallePedido.setPedido(pedido);
+        return detallePedidoRepository.save(nuevoDetallePedido);
     }
 
     @Override
@@ -138,18 +138,19 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public DetallePedido actualizarDetallePedido(DetallePedido nuevoDetalle, Integer idPedido) throws BusinessRuleException{
-        pedidoValidator.validarActualizarDetallePedido(nuevoDetalle, idPedido);
-        nuevoDetalle.setPedido(buscarPedidoPorId(idPedido).get());
-        nuevoDetalle = detallePedidoRepository.save(nuevoDetalle);
-        return nuevoDetalle;
+        Pedido pedido = pedidoValidator.validarActualizarDetallePedido(nuevoDetalle, idPedido);
+        nuevoDetalle.setPedido(pedido);
+        return detallePedidoRepository.save(nuevoDetalle);
     }
 
     @Override
     public Pedido confirmarPedido(Integer id) throws BusinessRuleException {
-        pedidoValidator.validarConfirmacion(id);
-        Pedido pedido = buscarPedidoPorId(id).get();
-        //TODO verificar stocks
-        //TODO verificar saldo deudor
+        Pedido pedido = pedidoValidator.validarConfirmacion(id);
+        if(!productoService.buscarProductosSinStock(pedido.getDetallePedido()).isEmpty()){
+            pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
+        }else{
+            //TODO verificar saldo deudor
+        }
         return pedidoRepository.save(pedido);
     }
 

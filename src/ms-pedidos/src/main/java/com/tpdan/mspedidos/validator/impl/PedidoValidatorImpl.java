@@ -37,7 +37,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
     }
 
     @Override
-    public void validarCreacionDetalle(DetallePedido detallePedido, Integer id) throws BusinessRuleException {
+    public Pedido validarCreacionDetalle(DetallePedido detallePedido, Integer id) throws BusinessRuleException {
         Optional<Pedido> pedidoOptional = pedidoService.buscarPedidoPorId(id);
         if(pedidoOptional.isEmpty()){
             throw new PedidoInexistenteException();
@@ -48,6 +48,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(detallePedido.getProductoId()==null || detallePedido.getProducto()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
             throw new DetalleSinProductosException();
         }
+        return pedidoOptional.get();
     }
 
     @Override
@@ -58,7 +59,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
     }
 
     @Override
-    public void validarActualizarDetallePedido(DetallePedido detallePedido, Integer id) throws BusinessRuleException {
+    public Pedido validarActualizarDetallePedido(DetallePedido detallePedido, Integer id) throws BusinessRuleException {
         Optional<Pedido> pedidoOptional = pedidoService.buscarPedidoPorId(id);
         if(pedidoOptional.isEmpty()){
             throw new PedidoInexistenteException();
@@ -69,6 +70,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(detallePedido.getProductoId()==null || detallePedido.getProducto()==null || detallePedido.getCantidad()==null || detallePedido.getCantidad()==0){
             throw new DetalleSinProductosException();
         }
+        return pedidoOptional.get();
     }
 
     @Override
@@ -97,7 +99,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
     }
 
     @Override
-    public void validarConfirmacion(Integer id) throws BusinessRuleException {
+    public Pedido validarConfirmacion(Integer id) throws BusinessRuleException {
         Optional<Pedido> pedidoOptional = pedidoService.buscarPedidoPorId(id);
         if(pedidoOptional.isEmpty()){
             throw new PedidoInexistenteException();
@@ -105,5 +107,6 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(!pedidoOptional.get().getEstadoPedido().equals(EstadoPedido.NUEVO)){
             throw new PedidoNoModificableException();
         }
+        return pedidoOptional.get();
     }
 }
