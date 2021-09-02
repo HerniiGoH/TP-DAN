@@ -1,6 +1,7 @@
 package com.tpdan.mspedidos.service.impl;
 
 import com.tpdan.mspedidos.exceptions.BusinessRuleException;
+import com.tpdan.mspedidos.exceptions.PedidoInexistenteException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
 import com.tpdan.mspedidos.model.dto.Obra;
@@ -41,25 +42,8 @@ public class PedidoServiceImpl implements PedidoService {
     public List<Pedido> buscarTodos() throws BusinessRuleException{
         List<Pedido> pedidosEncontrados = pedidoRepository.findAll();
 
-        Set<Integer> ids = new HashSet<>();
-        Set<Integer> idsObra = new HashSet<>();
-
-        pedidosEncontrados.forEach(pedido -> {
-            idsObra.add(pedido.getObraId());
-            pedido.getDetallePedido().forEach(detallePedido -> {
-                ids.add(detallePedido.getProductoId());
-            });
-        });
-
-        List<Producto> productos = productoService.buscarProductosPorId(new ArrayList<>(ids));
-        List<Obra> obras = clienteService.buscarObrasPorId(new ArrayList<>(idsObra));
-
-        for(Pedido pedido : pedidosEncontrados){
-            pedido.setObra(obras.stream().filter(o-> Objects.equals(o.getId(), pedido.getObraId())).findFirst().get());
-            pedido.getDetallePedido().forEach(dp->{
-                dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-            });
-        }
+        Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontrados);
+        inicializarListaPedidos(pedidosEncontrados, clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
 
         return pedidosEncontrados;
     }
@@ -71,24 +55,8 @@ public class PedidoServiceImpl implements PedidoService {
 
         if(pedidoEncontrado.isPresent()){
 
-            Pedido pedido = pedidoEncontrado.get();
-
-            Set<Integer> ids = new HashSet<>();
-            List<Integer> idsObra = new ArrayList<>(1);
-            idsObra.add(pedido.getObraId());
-
-            pedido.getDetallePedido().forEach(dp->{
-                ids.add(dp.getProductoId());
-            });
-
-            List<Producto> productos = productoService.buscarProductosPorId(new ArrayList<>(ids));
-            pedido.setObra(clienteService.buscarObrasPorId(idsObra).get(0));
-
-            pedido.getDetallePedido().forEach(dp->{
-                dp.setProducto(productos.stream().filter(p-> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-            });
-
-            return Optional.of(pedido);
+            Map<String, List<Integer>> map = obtenerListasIds(List.of(pedidoEncontrado.get()));
+            inicializarListaPedidos(List.of(pedidoEncontrado.get()), clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
         }
         return pedidoEncontrado;
     }
@@ -99,28 +67,9 @@ public class PedidoServiceImpl implements PedidoService {
         Optional<List<Pedido>> pedidosEncontradosOpt = pedidoRepository.findByIdObra(id);
 
         if(pedidosEncontradosOpt.isPresent()){
+            Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontradosOpt.get());
+            inicializarListaPedidos(pedidosEncontradosOpt.get(), clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
 
-            List<Pedido> pedidosEncontrados = pedidosEncontradosOpt.get();
-
-            Set<Integer> ids = new HashSet<>();
-            Set<Integer> idsObra = new HashSet<>();
-
-            pedidosEncontrados.forEach(pedido -> {
-                idsObra.add(pedido.getObraId());
-                pedido.getDetallePedido().forEach(detallePedido -> {
-                    ids.add(detallePedido.getProductoId());
-                });
-            });
-            List<Producto> productos = productoService.buscarProductosPorId(new ArrayList<>(ids));
-            List<Obra> obras = clienteService.buscarObrasPorId(new ArrayList<>(idsObra));
-
-            for(Pedido pedido : pedidosEncontrados){
-                pedido.setObra(obras.stream().filter(o-> Objects.equals(o.getId(), pedido.getObraId())).findFirst().get());
-                pedido.getDetallePedido().forEach(dp->{
-                    dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-                });
-            }
-            return Optional.of(pedidosEncontrados);
         }
 
         return pedidosEncontradosOpt;
@@ -129,57 +78,24 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<List<Pedido>> buscarPedidosPorCliente(Integer id, String cuit) throws BusinessRuleException {
         List<Obra> obras = clienteService.buscarObrasPorCliente(id, cuit);
+
         Optional<List<Pedido>> pedidosEncontradosOpt = pedidoRepository.findPedidosByObraIdIsIn(obras.stream().map(Obra::getId).collect(Collectors.toUnmodifiableList()));
 
         if(pedidosEncontradosOpt.isPresent()){
-            List<Pedido> pedidosEncontrados = pedidosEncontradosOpt.get();
-            Set<Integer> ids = new HashSet<>();
-            pedidosEncontrados.forEach(pedido -> {
-                pedido.getDetallePedido().forEach(detallePedido -> {
-                    ids.add(detallePedido.getProductoId());
-                });
-            });
-            List<Producto> productos = productoService.buscarProductosPorId(new ArrayList<>(ids));
-
-            for(Pedido pedido : pedidosEncontrados){
-                pedido.setObra(obras.stream().filter(obra -> Objects.equals(obra.getId(), pedido.getObraId())).findFirst().get());
-                pedido.getDetallePedido().forEach(dp->{
-                    dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-                });
-            }
-            return Optional.of(pedidosEncontrados);
+            Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontradosOpt.get());
+            inicializarListaPedidos(pedidosEncontradosOpt.get(), obras, productoService.buscarProductosPorId(map.get("ids")));
         }
 
-        return Optional.empty();
+        return pedidosEncontradosOpt;
     }
 
     @Override
     public Optional<List<Pedido>> buscarPedidosPorEstado(String estado) throws BusinessRuleException {
         Optional<List<Pedido>> pedidosEncontradosOpt = pedidoRepository.buscarPedidoPorEstado(estado);
-
             if(pedidosEncontradosOpt.isPresent()){
-                List<Pedido> pedidosEncontrados = pedidosEncontradosOpt.get();
+                Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontradosOpt.get());
+                inicializarListaPedidos(pedidosEncontradosOpt.get(), clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
 
-                Set<Integer> ids = new HashSet<>();
-                Set<Integer> idsObra = new HashSet<>();
-
-                pedidosEncontrados.forEach(pedido -> {
-                    idsObra.add(pedido.getObraId());
-                    pedido.getDetallePedido().forEach(detallePedido -> {
-                        ids.add(detallePedido.getProductoId());
-                    });
-                });
-
-                List<Producto> productos = productoService.buscarProductosPorId(new ArrayList<>(ids));
-                List<Obra> obras = clienteService.buscarObrasPorId(new ArrayList<>(idsObra));
-
-                for(Pedido pedido : pedidosEncontrados){
-                    pedido.setObra(obras.stream().filter(o-> Objects.equals(o.getId(), pedido.getObraId())).findFirst().get());
-                    pedido.getDetallePedido().forEach(dp->{
-                        dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-                    });
-                }
-                return Optional.of(pedidosEncontrados);
             }
         return pedidosEncontradosOpt;
     }
@@ -197,7 +113,7 @@ public class PedidoServiceImpl implements PedidoService {
 
             return detallePedidoOptional;
         }
-        return Optional.empty();
+        throw new PedidoInexistenteException();
     }
 
     @Override
@@ -247,5 +163,31 @@ public class PedidoServiceImpl implements PedidoService {
     public void borrarDetallePedido(Integer idPedido, Integer id) throws BusinessRuleException {
         pedidoValidator.validarBorrarDetallePedido(idPedido, id);
         detallePedidoRepository.deleteById(id);
+    }
+
+    private void inicializarListaPedidos(List<Pedido> pedidos, List<Obra> obras, List<Producto> productos){
+        for(Pedido pedido : pedidos){
+            pedido.setObra(obras.stream().filter(o-> Objects.equals(o.getId(), pedido.getObraId())).findFirst().get());
+            pedido.getDetallePedido().forEach(dp->{
+                dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
+            });
+        }
+    }
+
+    private Map<String, List<Integer>> obtenerListasIds(final List<Pedido> pedidos){
+        Set<Integer> ids = new HashSet<>();
+        Set<Integer> idsObra = new HashSet<>();
+
+        pedidos.forEach(pedido -> {
+            idsObra.add(pedido.getObraId());
+            pedido.getDetallePedido().forEach(detallePedido -> {
+                ids.add(detallePedido.getProductoId());
+            });
+        });
+        Map<String, List<Integer>> map = new HashMap<>();
+        map.put("ids", new ArrayList<>(ids));
+        map.put("idsObra", new ArrayList<>(idsObra));
+
+        return map;
     }
 }

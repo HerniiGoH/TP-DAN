@@ -3,7 +3,7 @@ CREATE TABLE pedido
     id               INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fecha_pedido     DATETIME         NOT NULL,
     estado_pedido    VARCHAR(20)      NOT NULL,
-    obra_id          INTEGER UNSIGNED NOT NULL,
+    obra_id          INTEGER UNSIGNED NOT NULL
 
 );
 
