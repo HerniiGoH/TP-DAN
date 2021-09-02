@@ -1,6 +1,7 @@
 package com.tpdan.msusuarios.service.impl;
 
 import com.tpdan.msusuarios.exceptions.BusinessRuleException;
+import com.tpdan.msusuarios.exceptions.ClienteConPedidosException;
 import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.repository.ClienteRepository;
 import com.tpdan.msusuarios.service.ClienteService;
@@ -8,6 +9,7 @@ import com.tpdan.msusuarios.service.UsuarioService;
 import com.tpdan.msusuarios.validator.ClienteValidator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +56,13 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void borrarCliente(Integer id) throws BusinessRuleException{
-        clienteValidator.validarEliminacion(id);
-        //TODO valdiar que no tenga pedidos
+        try{
+            clienteValidator.validarEliminacion(id);
+        }catch(ClienteConPedidosException e){
+            Cliente cliente = clienteRepository.findById(id).get();
+            cliente.setFechaBaja(LocalDateTime.now());
+            clienteRepository.save(cliente);
+        }
         clienteRepository.deleteById(id);
     }
 }
