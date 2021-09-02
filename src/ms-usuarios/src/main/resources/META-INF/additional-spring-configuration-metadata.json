@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "pedidos.obtener-pedidos-por-cliente",
+      "type": "java.lang.String",
+      "description": "URL al MS-Pedidos para obtener la lista de pedidos de un cliente."
+    }
+  ]
+}

@@ -34,7 +34,7 @@ public class ObraController {
         return ResponseEntity.of(obraService.buscarObra(id, descripcion, latitud, longitud, direccion, superficie, jsonWrapper.getTipoObra(), jsonWrapper.getCliente()));
     }
 
-    @GetMapping("/obra/cliente")
+    @GetMapping("/cliente")
     public ResponseEntity<List<Obra>>buscarObraPorCliente(@RequestParam(required = false) Integer id, @RequestParam(required = false) String cuit){
         return ResponseEntity.of(obraService.buscarObraPorCliente(id, cuit));
     }

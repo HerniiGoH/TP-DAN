@@ -4,8 +4,9 @@ import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.dto.Obra;
 import com.tpdan.mspedidos.service.ClienteService;
 import com.tpdan.mspedidos.service.WebClientService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import reactor.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +18,11 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final WebClientService webClientService;
 
+    @Value("${usuarios.buscar-obras-por-id}")
+    private String URL_ID;
+    @Value("${usuarios.buscar-obras-por-cliente}")
+    private String URL_CLIENTE;
+
     public ClienteServiceImpl(WebClientService webClientService){
         this.webClientService = webClientService;
     }
@@ -25,11 +31,11 @@ public class ClienteServiceImpl implements ClienteService {
     public List<Obra> buscarObrasPorId(List<Integer> ids) throws BusinessRuleException {
         Map<String, String> mapIds = new HashMap<>();
         mapIds.put("ids", StringUtils.collectionToCommaDelimitedString(ids));
-        return Arrays.asList(webClientService.get(Obra[].class, "", mapIds));
+        return Arrays.asList(webClientService.get(Obra[].class, URL_ID, mapIds));
     }
 
     @Override
     public List<Obra> buscarObrasPorCliente(Integer id, String cuit) throws BusinessRuleException {
-        return Arrays.asList(webClientService.get(Obra[].class, "", id, cuit));
+        return Arrays.asList(webClientService.get(Obra[].class, URL_CLIENTE, id, cuit));
     }
 }

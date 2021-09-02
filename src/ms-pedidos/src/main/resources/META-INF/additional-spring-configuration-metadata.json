@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "usuarios.buscar-obras-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Usuarios para obtener una lista de obras por ids."
+    },
+    {
+      "name": "usuarios.buscar-obras-por-cliente",
+      "type": "java.lang.String",
+      "description": "URL al MS-Usuarios para obtener una lista de obras de un cliente por id y cuit."
+    },
+    {
+      "name": "productos.buscar-productos-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Productos pars obtener una lista de productos por ids."
+    }
+  ]
+}
