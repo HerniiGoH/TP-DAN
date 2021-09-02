@@ -14,6 +14,11 @@
       "name": "productos.buscar-productos-por-id",
       "type": "java.lang.String",
       "description": "URL al MS-Productos pars obtener una lista de productos por ids."
+    },
+    {
+      "name": "productos.buscar-productos-sin-stock",
+      "type": "java.lang.String",
+      "description": "URL al MS-Productos pars obtener una lista de productos sin stock por id y cantidad."
     }
   ]
 }
