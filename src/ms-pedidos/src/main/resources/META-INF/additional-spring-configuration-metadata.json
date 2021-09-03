@@ -11,6 +11,11 @@
       "description": "URL al MS-Usuarios para obtener una lista de obras de un cliente por id y cuit."
     },
     {
+      "name": "usuarios.buscar-cliente-por-id-obra",
+      "type": "java.lang.String",
+      "description": "URL al MS-Usuarios para obtener un cliente por idObra."
+    },
+    {
       "name": "productos.buscar-productos-por-id",
       "type": "java.lang.String",
       "description": "URL al MS-Productos pars obtener una lista de productos por ids."
@@ -19,6 +24,11 @@
       "name": "productos.buscar-productos-sin-stock",
       "type": "java.lang.String",
       "description": "URL al MS-Productos pars obtener una lista de productos sin stock por id y cantidad."
+    },
+    {
+      "name": "bcra.buscar-riesgo-por-cuit",
+      "type": "java.lang.String",
+      "description": "URL al MS-BCRA pars obtener un Riesgo BCRA por cuit de cliente."
     }
   ]
 }

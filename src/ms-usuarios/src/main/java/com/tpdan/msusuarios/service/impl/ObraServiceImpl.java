@@ -1,10 +1,12 @@
 package com.tpdan.msusuarios.service.impl;
 
+import com.tpdan.msusuarios.exceptions.BusinessRuleException;
 import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.model.Obra;
 import com.tpdan.msusuarios.model.TipoObra;
 import com.tpdan.msusuarios.repository.ObraRepository;
 import com.tpdan.msusuarios.service.ObraService;
+import com.tpdan.msusuarios.validator.ObraValidador;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class ObraServiceImpl implements ObraService {
 
     private final ObraRepository obraRepository;
+    private final ObraValidador obraValidador;
 
-    public ObraServiceImpl(ObraRepository obraRepository){
+    public ObraServiceImpl(ObraRepository obraRepository, ObraValidador obraValidador){
         this.obraRepository = obraRepository;
+        this.obraValidador = obraValidador;
     }
 
     @Override
@@ -55,7 +59,8 @@ public class ObraServiceImpl implements ObraService {
     }
 
     @Override
-    public void borrarObra(Integer id) {
+    public void borrarObra(Integer id) throws BusinessRuleException {
+        obraValidador.validarEliminacion(id);
         obraRepository.deleteById(id);
     }
 }

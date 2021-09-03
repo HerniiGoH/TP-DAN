@@ -1,5 +1,6 @@
 package com.tpdan.msusuarios.controller;
 
+import com.tpdan.msusuarios.exceptions.BusinessRuleException;
 import com.tpdan.msusuarios.model.Obra;
 import com.tpdan.msusuarios.model.dto.JsonWrapper;
 import com.tpdan.msusuarios.service.ObraService;
@@ -50,7 +51,7 @@ public class ObraController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpStatus eliminarObra(@PathVariable Integer id){
+    public HttpStatus eliminarObra(@PathVariable Integer id) throws BusinessRuleException {
         obraService.borrarObra(id);
         return HttpStatus.NO_CONTENT;
     }

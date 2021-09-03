@@ -1,6 +1,7 @@
 package com.tpdan.mspedidos.service.impl;
 
 import com.tpdan.mspedidos.exceptions.BusinessRuleException;
+import com.tpdan.mspedidos.model.dto.Cliente;
 import com.tpdan.mspedidos.model.dto.Obra;
 import com.tpdan.mspedidos.service.ClienteService;
 import com.tpdan.mspedidos.service.WebClientService;
@@ -21,7 +22,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Value("${usuarios.buscar-obras-por-id}")
     private String URL_ID;
     @Value("${usuarios.buscar-obras-por-cliente}")
-    private String URL_CLIENTE;
+    private String URL_OBRA_POR_CLIENTE;
+    @Value("${usuarios.buscar-cliente-por-id-obra}")
+    private String URL_CLIENTE_POR_ID_OBRA;
 
     public ClienteServiceImpl(WebClientService webClientService){
         this.webClientService = webClientService;
@@ -36,6 +39,13 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<Obra> buscarObrasPorCliente(Integer id, String cuit) throws BusinessRuleException {
-        return Arrays.asList(webClientService.get(Obra[].class, URL_CLIENTE, id, cuit));
+        return Arrays.asList(webClientService.get(Obra[].class, URL_OBRA_POR_CLIENTE, id, cuit));
     }
+
+    @Override
+    public Cliente buscarClientePorIdObra(Integer id) throws BusinessRuleException {
+        return webClientService.get(Cliente.class, URL_CLIENTE_POR_ID_OBRA, id);
+    }
+
+
 }

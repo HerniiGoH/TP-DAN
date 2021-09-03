@@ -2,13 +2,17 @@ package com.tpdan.mspedidos.service.impl;
 
 import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.exceptions.PedidoInexistenteException;
+import com.tpdan.mspedidos.exceptions.RiesgoBCRAException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
+import com.tpdan.mspedidos.model.dto.Cliente;
 import com.tpdan.mspedidos.model.dto.Obra;
 import com.tpdan.mspedidos.model.dto.Producto;
+import com.tpdan.mspedidos.model.dto.RiesgoBCRA;
 import com.tpdan.mspedidos.model.enumerations.EstadoPedido;
 import com.tpdan.mspedidos.repository.DetallePedidoRepository;
 import com.tpdan.mspedidos.repository.PedidoRepository;
+import com.tpdan.mspedidos.service.BCRAService;
 import com.tpdan.mspedidos.service.ClienteService;
 import com.tpdan.mspedidos.service.PedidoService;
 import com.tpdan.mspedidos.service.ProductoService;
@@ -26,17 +30,20 @@ public class PedidoServiceImpl implements PedidoService {
     private final PedidoValidator pedidoValidator;
     private final ClienteService clienteService;
     private final ProductoService productoService;
+    private final BCRAService bcraService;
 
     public PedidoServiceImpl(PedidoRepository pedidoRepository,
                              DetallePedidoRepository detallePedidoRepository,
                              PedidoValidator pedidoValidator,
                              ClienteService clienteService,
-                             ProductoService productoService){
+                             ProductoService productoService,
+                             BCRAService bcraService){
         this.pedidoRepository = pedidoRepository;
         this.detallePedidoRepository = detallePedidoRepository;
         this.pedidoValidator = pedidoValidator;
         this.clienteService = clienteService;
         this.productoService = productoService;
+        this.bcraService = bcraService;
     }
 
     @Override
@@ -149,7 +156,14 @@ public class PedidoServiceImpl implements PedidoService {
         if(!productoService.buscarProductosSinStock(pedido.getDetallePedido()).isEmpty()){
             pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
         }else{
-            //TODO verificar saldo deudor
+            Cliente cliente = clienteService.buscarClientePorIdObra(pedido.getObraId());
+            if(cliente.getMaximoCuentaCorriente().compareTo(pedido.getPrecio())<0){
+                if(!bcraService.obtenerRiesgoPorCliente(cliente.getCuit()).equals(RiesgoBCRA.RIESGO_BAJO)){
+                    //TODO ver si rechazamos el pedido y lo guardamos
+                    throw new RiesgoBCRAException();
+                }
+            }
+            pedido.setEstadoPedido(EstadoPedido.ACEPTADO);
         }
         return pedidoRepository.save(pedido);
     }
@@ -169,9 +183,7 @@ public class PedidoServiceImpl implements PedidoService {
     private void inicializarListaPedidos(List<Pedido> pedidos, List<Obra> obras, List<Producto> productos){
         for(Pedido pedido : pedidos){
             pedido.setObra(obras.stream().filter(o-> Objects.equals(o.getId(), pedido.getObraId())).findFirst().get());
-            pedido.getDetallePedido().forEach(dp->{
-                dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-            });
+            pedido.getDetallePedido().forEach(dp-> dp.setProducto(productos.stream().filter(p -> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get()));
         }
     }
 
@@ -181,9 +193,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         pedidos.forEach(pedido -> {
             idsObra.add(pedido.getObraId());
-            pedido.getDetallePedido().forEach(detallePedido -> {
-                ids.add(detallePedido.getProductoId());
-            });
+            pedido.getDetallePedido().forEach(detallePedido -> ids.add(detallePedido.getProductoId()));
         });
         Map<String, List<Integer>> map = new HashMap<>();
         map.put("ids", new ArrayList<>(ids));

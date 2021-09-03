@@ -25,6 +25,7 @@ public class Pedido {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime fechaPedido;
+    private Double precio;
     @Enumerated(EnumType.STRING)
     private EstadoPedido estadoPedido;
     @JsonIdentityReference
@@ -37,9 +38,10 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Integer id, LocalDateTime fechaPedido, EstadoPedido estadoPedido, List<DetallePedido> detallePedido, Obra obra, Integer obraId) {
+    public Pedido(Integer id, LocalDateTime fechaPedido, Double precio, EstadoPedido estadoPedido, List<DetallePedido> detallePedido, Obra obra, Integer obraId) {
         this.id = id;
         this.fechaPedido = fechaPedido;
+        this.precio = precio;
         this.estadoPedido = estadoPedido;
         this.detallePedido = detallePedido;
         this.obra = obra;
@@ -60,6 +62,14 @@ public class Pedido {
 
     public void setFechaPedido(LocalDateTime fechaPedido) {
         this.fechaPedido = fechaPedido;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
     public EstadoPedido getEstadoPedido() {

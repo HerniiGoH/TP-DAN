@@ -13,6 +13,7 @@
         <module>src/ms-pedidos</module>
         <module>src/ms-productos</module>
         <module>src/ms-pagos</module>
+        <module>src/ms-bcra</module>
     </modules>
 
 </project>

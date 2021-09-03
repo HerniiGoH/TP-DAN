@@ -1,0 +1,5 @@
+package com.tpdan.mspedidos.model.dto;
+
+public enum RiesgoBCRA {
+    NORMAL, RIESGO_BAJO, RIESGO_MEDIO, RIESGO_ALTO, IRRECUPERABLE, IRRECUPERABLE_POR_DISPOSICION_TECNICA;
+}

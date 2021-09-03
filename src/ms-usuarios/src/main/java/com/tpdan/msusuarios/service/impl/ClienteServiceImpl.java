@@ -42,6 +42,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public Cliente buscarClientePorIdObra(Integer id) {
+        return clienteRepository.findByIdObra(id);
+    }
+
+    @Override
     public Cliente crearCliente(Cliente nuevoCliente) throws BusinessRuleException {
         clienteValidator.validarCreacion(nuevoCliente);
         nuevoCliente.setUsuario(usuarioService.crearUsuario(nuevoCliente.getUsuario()));

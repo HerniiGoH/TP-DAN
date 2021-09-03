@@ -33,6 +33,11 @@ public class ClienteController {
         return ResponseEntity.of(clienteService.buscarCliente(id, cuit, razonSocial, mail, maxCuentaCorriente, habilitadoOnline));
     }
 
+    @GetMapping("/obra")
+    public ResponseEntity<Cliente> buscarClientePorIdObra(@RequestParam(required = false) Integer idObra){
+        return ResponseEntity.ok(clienteService.buscarClientePorIdObra(idObra));
+    }
+
     @PostMapping
     public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) throws BusinessRuleException {
         return new ResponseEntity<>(clienteService.crearCliente(cliente), HttpStatus.CREATED);

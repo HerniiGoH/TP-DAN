@@ -1,5 +1,6 @@
 package com.tpdan.msusuarios.service;
 
+import com.tpdan.msusuarios.exceptions.BusinessRuleException;
 import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.model.Obra;
 import com.tpdan.msusuarios.model.TipoObra;
@@ -15,5 +16,5 @@ public interface ObraService {
     Obra crearObra(Obra nuevaObra);
     List<Obra> crearObras(List<Obra> nuevasObras);
     Obra actualizarObra(Obra nuevaObra);
-    void borrarObra(Integer id);
+    void borrarObra(Integer id) throws BusinessRuleException;
 }

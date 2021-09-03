@@ -3,6 +3,8 @@ package com.tpdan.msusuarios.validator.impl;
 import com.tpdan.msusuarios.exceptions.*;
 import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.model.Obra;
+import com.tpdan.msusuarios.model.dto.RiesgoBCRA;
+import com.tpdan.msusuarios.service.BCRAService;
 import com.tpdan.msusuarios.service.ClienteService;
 import com.tpdan.msusuarios.service.PedidoService;
 import com.tpdan.msusuarios.validator.ClienteValidator;
@@ -16,11 +18,14 @@ public class ClienteValidatorImpl implements ClienteValidator {
 
     private final ClienteService clienteService;
     private final PedidoService pedidoService;
+    private final BCRAService bcraService;
 
     public ClienteValidatorImpl(@Lazy ClienteService clienteService,
-                                PedidoService pedidoService){
+                                PedidoService pedidoService,
+                                BCRAService bcraService){
         this.clienteService = clienteService;
         this.pedidoService = pedidoService;
+        this.bcraService = bcraService;
     }
 
     @Override
@@ -33,8 +38,10 @@ public class ClienteValidatorImpl implements ClienteValidator {
                 throw new ClienteSinTipoDeObraException();
             }
         }
-
-        //TODO validar situacion crediticia
+        RiesgoBCRA riesgoBCRA = bcraService.buscarRiesgoPorCuit(cliente.getCuit());
+        if(!RiesgoBCRA.esSituacionValida(riesgoBCRA)){
+            throw new SituacionCrediticiaException(riesgoBCRA);
+        }
     }
 
     @Override
