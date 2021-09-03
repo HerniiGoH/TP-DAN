@@ -12,10 +12,7 @@ import com.tpdan.mspedidos.model.dto.RiesgoBCRA;
 import com.tpdan.mspedidos.model.enumerations.EstadoPedido;
 import com.tpdan.mspedidos.repository.DetallePedidoRepository;
 import com.tpdan.mspedidos.repository.PedidoRepository;
-import com.tpdan.mspedidos.service.BCRAService;
-import com.tpdan.mspedidos.service.ClienteService;
-import com.tpdan.mspedidos.service.PedidoService;
-import com.tpdan.mspedidos.service.ProductoService;
+import com.tpdan.mspedidos.service.*;
 import com.tpdan.mspedidos.validator.PedidoValidator;
 import org.springframework.stereotype.Service;
 
@@ -31,19 +28,22 @@ public class PedidoServiceImpl implements PedidoService {
     private final ClienteService clienteService;
     private final ProductoService productoService;
     private final BCRAService bcraService;
+    private final RabbitService rabbitService;
 
     public PedidoServiceImpl(PedidoRepository pedidoRepository,
                              DetallePedidoRepository detallePedidoRepository,
                              PedidoValidator pedidoValidator,
                              ClienteService clienteService,
                              ProductoService productoService,
-                             BCRAService bcraService){
+                             BCRAService bcraService,
+                             RabbitService rabbitService){
         this.pedidoRepository = pedidoRepository;
         this.detallePedidoRepository = detallePedidoRepository;
         this.pedidoValidator = pedidoValidator;
         this.clienteService = clienteService;
         this.productoService = productoService;
         this.bcraService = bcraService;
+        this.rabbitService = rabbitService;
     }
 
     @Override
@@ -164,6 +164,7 @@ public class PedidoServiceImpl implements PedidoService {
                 }
             }
             pedido.setEstadoPedido(EstadoPedido.ACEPTADO);
+            rabbitService.enviarMensaje(pedido.getDetallePedido());
         }
         return pedidoRepository.save(pedido);
     }
