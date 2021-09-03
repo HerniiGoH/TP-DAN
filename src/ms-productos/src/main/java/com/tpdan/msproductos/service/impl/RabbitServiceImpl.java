@@ -1,5 +1,6 @@
 package com.tpdan.msproductos.service.impl;
 
+import com.tpdan.msproductos.exceptions.BusinessRuleException;
 import com.tpdan.msproductos.model.dto.Pedido;
 import com.tpdan.msproductos.service.ProductoService;
 import com.tpdan.msproductos.service.RabbitService;
@@ -15,7 +16,7 @@ public class RabbitServiceImpl implements RabbitService {
     }
 
     @RabbitListener(queues = "COLA_PEDIDOS")
-    public void recibirMensaje(Pedido pedido){
+    public void recibirMensaje(Pedido pedido) throws BusinessRuleException {
         productoService.generarMovimientoStock(pedido);
     }
 }
