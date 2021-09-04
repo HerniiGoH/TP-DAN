@@ -1,6 +1,7 @@
 package com.tpdan.msusuarios.service.impl;
 
 import com.tpdan.msusuarios.exceptions.BusinessRuleException;
+import com.tpdan.msusuarios.model.Cliente;
 import com.tpdan.msusuarios.model.Usuario;
 import com.tpdan.msusuarios.repository.UsuarioRepository;
 import com.tpdan.msusuarios.service.UsuarioService;
@@ -22,7 +23,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario crearUsuario(Usuario usuario) throws BusinessRuleException {
+    public Usuario crearUsuario(Cliente cliente) throws BusinessRuleException {
+        Usuario usuario = cliente.getUsuario();
+        usuario.setUser(cliente.getMail());
+        usuario.setPassword("1234");
         usuarioValidator.validarCreacion(usuario);
         return usuarioRepository.save(usuario);
     }

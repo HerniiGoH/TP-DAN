@@ -2,6 +2,7 @@ package com.tpdan.msproductos.service;
 
 import com.tpdan.msproductos.exceptions.BusinessRuleException;
 import com.tpdan.msproductos.model.Producto;
+import com.tpdan.msproductos.model.dto.DetallePedido;
 import com.tpdan.msproductos.model.dto.Pedido;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface ProductoService {
     Producto actualizarProducto(Producto producto);
     Optional<List<Producto>> buscarProductos(String nombre, Integer stock, Double precio);
     List<Producto> buscarProductosSinStock(List<Integer> ids, List<Integer> cantidades);
-    void generarMovimientoStock(Pedido pedido) throws BusinessRuleException;
+    void generarMovimientoStock(List<DetallePedido> detallePedidoList) throws BusinessRuleException;
 }

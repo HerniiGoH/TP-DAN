@@ -1,13 +1,14 @@
 package com.tpdan.msproductos.service.impl;
 
 import com.tpdan.msproductos.exceptions.BusinessRuleException;
+import com.tpdan.msproductos.model.dto.DetallePedido;
 import com.tpdan.msproductos.model.dto.Pedido;
 import com.tpdan.msproductos.service.ProductoService;
 import com.tpdan.msproductos.service.RabbitService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Component
 public class RabbitServiceImpl implements RabbitService {
@@ -18,7 +19,7 @@ public class RabbitServiceImpl implements RabbitService {
     }
 
     @RabbitListener(queues = "${rabbit.nombre-cola}")
-    public void recibirMensaje(Pedido pedido) throws BusinessRuleException {
-        productoService.generarMovimientoStock(pedido);
+    public void recibirMensaje(List<DetallePedido> detallePedidoList) throws BusinessRuleException {
+        productoService.generarMovimientoStock(detallePedidoList);
     }
 }

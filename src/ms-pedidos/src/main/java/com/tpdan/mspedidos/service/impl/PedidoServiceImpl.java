@@ -127,7 +127,17 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Pedido crearPedido(Pedido nuevoPedido) throws BusinessRuleException {
         pedidoValidator.validarCreacion(nuevoPedido);
-        return pedidoRepository.save(nuevoPedido);
+        Pedido pedidoCreado = pedidoRepository.save(nuevoPedido);
+
+        pedidoCreado.getDetallePedido().forEach(dp->dp.setPedido(pedidoCreado));
+        pedidoCreado.setDetallePedido(detallePedidoRepository.saveAll(pedidoCreado.getDetallePedido()));
+
+        List<Pedido> aux = new ArrayList<>();
+        aux.add(pedidoCreado);
+        Map<String, List<Integer>> map = obtenerListasIds(aux);
+        inicializarListaPedidos(aux, clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
+
+        return pedidoCreado;
     }
 
     @Override
@@ -157,7 +167,7 @@ public class PedidoServiceImpl implements PedidoService {
             pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
         }else{
             Cliente cliente = clienteService.buscarClientePorIdObra(pedido.getObraId());
-            if(cliente.getMaximoCuentaCorriente().compareTo(pedido.getPrecio())<0){
+            if(cliente.getMaxCuentaCorriente().compareTo(pedido.getPrecio())<0){
                 if(!bcraService.obtenerRiesgoPorCliente(cliente.getCuit()).equals(RiesgoBCRA.RIESGO_BAJO)){
                     //TODO ver si rechazamos el pedido y lo guardamos
                     throw new RiesgoBCRAException();

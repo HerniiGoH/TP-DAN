@@ -19,10 +19,10 @@ public class Cliente {
     private String mail;
     private Double maxCuentaCorriente;
     private Boolean habilitadoOnline;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
     @JsonIdentityReference
-    @OneToMany(mappedBy = "cliente", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Obra> obras;
     private LocalDateTime fechaBaja;
 

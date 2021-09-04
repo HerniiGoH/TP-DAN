@@ -66,18 +66,22 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void generarMovimientoStock(Pedido pedido) throws BusinessRuleException {
-        List<Producto> productos = movimientoStockValidador.validarCreacion(pedido);
-        List<MovimientosStock> movimientosStocks = new ArrayList<>();
+    public void generarMovimientoStock(List<DetallePedido> detallePedidoList) throws BusinessRuleException {
+        try {
+            List<Producto> productos = movimientoStockValidador.validarCreacion(detallePedidoList);
+            List<MovimientosStock> movimientosStocks = new ArrayList<>();
 
-        for(DetallePedido dp : pedido.getDetallePedido()){
-            MovimientosStock movimientosStock = new MovimientosStock();
-            movimientosStock.setCantidadSalida(dp.getCantidad());
-            movimientosStock.setProducto(productos.stream().filter(p-> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
-            movimientosStock.setFecha(LocalDateTime.now());
-            movimientosStocks.add(movimientosStock);
+            for(DetallePedido dp : detallePedidoList){
+                MovimientosStock movimientosStock = new MovimientosStock();
+                movimientosStock.setCantidadSalida(dp.getCantidad());
+                movimientosStock.setProducto(productos.stream().filter(p-> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());
+                movimientosStock.setFecha(LocalDateTime.now());
+                movimientosStocks.add(movimientosStock);
+            }
+            movimientosStockRepository.saveAll(movimientosStocks);
+            //TODO verificar los stocks para hacer los pedidos de aprovisionamiento
+        } catch (BusinessRuleException e) {
+            e.printStackTrace();
         }
-        movimientosStockRepository.saveAll(movimientosStocks);
-        //TODO verificar los stocks para hacer los pedidos de aprovisionamiento
     }
 }

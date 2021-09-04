@@ -7,6 +7,9 @@ import com.tpdan.msusuarios.service.WebClientService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class BCRAServiceImpl implements BCRAService {
     private final WebClientService webClientService;
@@ -19,6 +22,8 @@ public class BCRAServiceImpl implements BCRAService {
     }
     @Override
     public RiesgoBCRA buscarRiesgoPorCuit(String cuit) throws BusinessRuleException {
-        return webClientService.get(RiesgoBCRA.class, URL, cuit);
+        Map<String, Object> map= new HashMap<>();
+        map.put("cuit", cuit);
+        return webClientService.get(RiesgoBCRA.class, URL, map);
     }
 }

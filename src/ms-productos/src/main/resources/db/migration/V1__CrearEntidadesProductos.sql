@@ -28,8 +28,8 @@ CREATE TABLE provision_detalle
 CREATE TABLE movimientos_stock
 (
     id                   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    cantidad_entrada     INTEGER          NOT NULL,
-    cantidad_salida      INTEGER          NOT NULL,
+    cantidad_entrada     INTEGER,
+    cantidad_salida      INTEGER,
     fecha                DATETIME         NOT NULL,
     producto_id          INTEGER UNSIGNED NOT NULL,
     provision_detalle_id INTEGER UNSIGNED,

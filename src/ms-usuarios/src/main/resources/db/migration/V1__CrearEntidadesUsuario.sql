@@ -7,7 +7,7 @@ CREATE TABLE tipo_usuario
 CREATE TABLE usuario
 (
     id              INTEGER UNSIGNED   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user            VARCHAR(20) UNIQUE NOT NULL,
+    user            VARCHAR(50) UNIQUE NOT NULL,
     password        VARCHAR(50)        NOT NULL,
     tipo_usuario_id INTEGER UNSIGNED,
     CONSTRAINT fk_tipo_usuario_usuario FOREIGN KEY (tipo_usuario_id) REFERENCES tipo_usuario (id)

@@ -29,7 +29,7 @@ public class ClienteValidatorImpl implements ClienteValidator {
     }
 
     @Override
-    public void validarCreacion(Cliente cliente) throws BusinessRuleException {
+    public RiesgoBCRA validarCreacion(Cliente cliente) throws BusinessRuleException {
         if(cliente.getObras() == null || cliente.getObras().isEmpty()){
             throw new ClienteSinObrasException();
         }
@@ -42,6 +42,7 @@ public class ClienteValidatorImpl implements ClienteValidator {
         if(!RiesgoBCRA.esSituacionValida(riesgoBCRA)){
             throw new SituacionCrediticiaException(riesgoBCRA);
         }
+        return riesgoBCRA;
     }
 
     @Override

@@ -5,18 +5,18 @@ public class Cliente {
     private String razonSocial;
     private String cuit;
     private String mail;
-    private Double maximoCuentaCorriente;
+    private Double maxCuentaCorriente;
     private Boolean habilitadoOnline;
 
     public Cliente() {
     }
 
-    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maximoCuentaCorriente, Boolean habilitadoOnline) {
+    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline) {
         this.id = id;
         this.razonSocial = razonSocial;
         this.cuit = cuit;
         this.mail = mail;
-        this.maximoCuentaCorriente = maximoCuentaCorriente;
+        this.maxCuentaCorriente = maxCuentaCorriente;
         this.habilitadoOnline = habilitadoOnline;
     }
 
@@ -52,12 +52,12 @@ public class Cliente {
         this.mail = mail;
     }
 
-    public Double getMaximoCuentaCorriente() {
-        return maximoCuentaCorriente;
+    public Double getMaxCuentaCorriente() {
+        return maxCuentaCorriente;
     }
 
-    public void setMaximoCuentaCorriente(Double maximoCuentaCorriente) {
-        this.maximoCuentaCorriente = maximoCuentaCorriente;
+    public void setMaxCuentaCorriente(Double maxCuentaCorriente) {
+        this.maxCuentaCorriente = maxCuentaCorriente;
     }
 
     public Boolean getHabilitadoOnline() {

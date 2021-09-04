@@ -31,14 +31,14 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public List<Producto> buscarProductosPorId(List<Integer> ids) throws BusinessRuleException {
-        Map<String, String> mapIds = new HashMap<>();
+        Map<String, Object> mapIds = new HashMap<>();
         mapIds.put("ids", StringUtils.collectionToCommaDelimitedString(ids));
         return Arrays.asList(webClientService.get(Producto[].class, URL, mapIds));
     }
 
     @Override
     public List<Producto> buscarProductosSinStock(List<DetallePedido> detallePedidos) throws BusinessRuleException {
-        Map<String,String> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
         map.put("ids", StringUtils.collectionToCommaDelimitedString(detallePedidos.stream().map(DetallePedido::getProductoId).collect(Collectors.toUnmodifiableList())));
         map.put("cantidades", StringUtils.collectionToCommaDelimitedString(detallePedidos.stream().map(DetallePedido::getCantidad).collect(Collectors.toUnmodifiableList())));
         return Arrays.asList(webClientService.get(Producto[].class,URL_SIN_STOCK, map));

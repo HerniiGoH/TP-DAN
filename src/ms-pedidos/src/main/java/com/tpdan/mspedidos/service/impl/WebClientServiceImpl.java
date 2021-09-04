@@ -4,8 +4,10 @@ import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.exceptions.ConnectionErrorException;
 import com.tpdan.mspedidos.service.WebClientService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -17,12 +19,14 @@ public class WebClientServiceImpl implements WebClientService {
     }
 
     @Override
-    public <T> T get(Class<T> tipo, String url, Object... args) throws BusinessRuleException {
+    public <T> T get(Class<T> tipo, String url, Map<String, Object> parameters) throws BusinessRuleException {
         T dto;
         try {
             dto = webClient
                     .get()
-                    .uri(url, args)
+                    .uri(url, uriBuilder->uriBuilder
+                            .queryParams(convertirMap(parameters))
+                            .build())
                     .retrieve()
                     .bodyToMono(tipo)
                     .block();
@@ -33,20 +37,13 @@ public class WebClientServiceImpl implements WebClientService {
         return dto;
     }
 
-    @Override
-    public <T> T get(Class<T> tipo, String url, Map<String, ?> parameters) throws BusinessRuleException {
-        T dto;
-        try {
-            dto = webClient
-                    .get()
-                    .uri(url, parameters)
-                    .retrieve()
-                    .bodyToMono(tipo)
-                    .block();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ConnectionErrorException();
-        }
-        return dto;
+    private LinkedMultiValueMap<String, String> convertirMap(Map<String, Object> map){
+        LinkedMultiValueMap<String, String> linkedMultiValueMap = new LinkedMultiValueMap<>();
+        map.forEach((clave, valor)->{
+            if(valor!=null){
+                linkedMultiValueMap.put(clave, Collections.singletonList(valor.toString()));
+            }
+        });
+        return linkedMultiValueMap;
     }
 }

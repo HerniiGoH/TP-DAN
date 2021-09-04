@@ -3,7 +3,9 @@ package com.tpdan.msusuarios.service.impl;
 import com.tpdan.msusuarios.exceptions.BusinessRuleException;
 import com.tpdan.msusuarios.exceptions.ClienteConPedidosException;
 import com.tpdan.msusuarios.model.Cliente;
+import com.tpdan.msusuarios.model.dto.RiesgoBCRA;
 import com.tpdan.msusuarios.repository.ClienteRepository;
+import com.tpdan.msusuarios.service.BCRAService;
 import com.tpdan.msusuarios.service.ClienteService;
 import com.tpdan.msusuarios.service.UsuarioService;
 import com.tpdan.msusuarios.validator.ClienteValidator;
@@ -20,7 +22,9 @@ public class ClienteServiceImpl implements ClienteService {
     private final ClienteValidator clienteValidator;
     private final UsuarioService usuarioService;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository, ClienteValidator clienteValidator, UsuarioService usuarioService){
+    public ClienteServiceImpl(ClienteRepository clienteRepository,
+                              ClienteValidator clienteValidator,
+                              UsuarioService usuarioService){
         this.clienteRepository = clienteRepository;
         this.clienteValidator = clienteValidator;
         this.usuarioService = usuarioService;
@@ -48,9 +52,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente crearCliente(Cliente nuevoCliente) throws BusinessRuleException {
-        clienteValidator.validarCreacion(nuevoCliente);
-        nuevoCliente.setUsuario(usuarioService.crearUsuario(nuevoCliente.getUsuario()));
+        RiesgoBCRA riesgoBCRA = clienteValidator.validarCreacion(nuevoCliente);
+        nuevoCliente.setUsuario(usuarioService.crearUsuario(nuevoCliente));
         nuevoCliente.getObras().forEach(obra -> obra.setCliente(nuevoCliente));
+        nuevoCliente.setHabilitadoOnline(RiesgoBCRA.esSituacionValida(riesgoBCRA));
+        //TODO ver que hacer con MAX CUENTA CORRIENTE
+        nuevoCliente.setMaxCuentaCorriente(nuevoCliente.getHabilitadoOnline()?50000.0:0.0);
         return clienteRepository.save(nuevoCliente);
     }
 
@@ -64,7 +71,7 @@ public class ClienteServiceImpl implements ClienteService {
         try{
             clienteValidator.validarEliminacion(id);
         }catch(ClienteConPedidosException e){
-            Cliente cliente = clienteRepository.findById(id).get();
+            Cliente cliente = clienteRepository.findById(id).orElseThrow();
             cliente.setFechaBaja(LocalDateTime.now());
             clienteRepository.save(cliente);
         }

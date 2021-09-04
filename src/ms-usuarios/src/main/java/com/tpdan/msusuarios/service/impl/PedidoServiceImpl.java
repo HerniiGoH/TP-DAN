@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PedidoServiceImpl implements PedidoService {
@@ -23,6 +25,9 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<Pedido> buscarPedidosPorCliente(Integer id, String cuit) throws BusinessRuleException {
-        return Arrays.asList(webClientService.get(Pedido[].class, URL, id, cuit));
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("cuit", cuit);
+        return Arrays.asList(webClientService.get(Pedido[].class, URL, map));
     }
 }

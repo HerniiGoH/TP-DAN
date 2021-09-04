@@ -25,9 +25,9 @@ public class MovimientoStockValidadorImpl implements MovimientoStockValidador {
     }
 
     @Override
-    public List<Producto> validarCreacion(Pedido pedido) throws BusinessRuleException {
+    public List<Producto> validarCreacion(List<DetallePedido> detallePedidoList) throws BusinessRuleException {
         Set<Integer> productoIds = new HashSet<>();
-        for(DetallePedido dp : pedido.getDetallePedido()){
+        for(DetallePedido dp : detallePedidoList){
             productoIds.add(dp.getProductoId());
         }
         List<Producto> productos = productoService.buscarTodos(new ArrayList<>(productoIds));
