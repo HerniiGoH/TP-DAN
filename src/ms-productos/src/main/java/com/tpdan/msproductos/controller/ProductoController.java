@@ -36,8 +36,6 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> buscarProductosSinStock(@RequestParam List<Integer> ids, @RequestParam List<Integer> cantidades){
         return ResponseEntity.ok(productoService.buscarProductosSinStock(ids, cantidades));
     }
-    
-    @GetMapping("")
 
     @PostMapping
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto){

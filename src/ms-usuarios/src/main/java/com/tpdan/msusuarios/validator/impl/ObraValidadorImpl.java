@@ -8,15 +8,18 @@ import com.tpdan.msusuarios.model.dto.Pedido;
 import com.tpdan.msusuarios.service.ObraService;
 import com.tpdan.msusuarios.service.PedidoService;
 import com.tpdan.msusuarios.validator.ObraValidador;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ObraValidadorImpl implements ObraValidador {
     private final ObraService obraService;
     private final PedidoService pedidoService;
 
-    public ObraValidadorImpl(ObraService obraService, PedidoService pedidoService) {
+    public ObraValidadorImpl(@Lazy ObraService obraService, PedidoService pedidoService) {
         this.obraService = obraService;
         this.pedidoService = pedidoService;
     }

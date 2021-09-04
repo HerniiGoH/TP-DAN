@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "rabbit.nombre-cola",
+      "type": "java.lang.String",
+      "description": "Nombre de la cola de mensajes de RabbitMQ."
+    }
+  ]
+}

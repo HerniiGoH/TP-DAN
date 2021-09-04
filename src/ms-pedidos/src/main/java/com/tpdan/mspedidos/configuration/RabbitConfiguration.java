@@ -12,12 +12,25 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfiguration {
-    @Value("${rabbit.direct-exchange-name}")
+
     public static String DIRECT_EXCHANGE_NAME;
-    @Value("${rabbit.nombre-cola}")
     public static String NOMBRE_COLA;
-    @Value("${rabbit.routing-key}")
     public static String ROUTING_KEY;
+
+    @Value("${rabbit.direct-exchange-name}")
+    public void setDirectExchangeName(String directExchangeName) {
+        DIRECT_EXCHANGE_NAME = directExchangeName;
+    }
+
+    @Value("${rabbit.nombre-cola}")
+    public void setNombreCola(String nombreCola) {
+        NOMBRE_COLA = nombreCola;
+    }
+
+    @Value("${rabbit.routing-key}")
+    public void setRoutingKey(String routingKey) {
+        ROUTING_KEY = routingKey;
+    }
 
     @Bean
     Queue queue() {

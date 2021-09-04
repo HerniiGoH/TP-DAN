@@ -29,6 +29,21 @@
       "name": "bcra.buscar-riesgo-por-cuit",
       "type": "java.lang.String",
       "description": "URL al MS-BCRA pars obtener un Riesgo BCRA por cuit de cliente."
+    },
+    {
+      "name": "rabbit.nombre-cola",
+      "type": "java.lang.String",
+      "description": "Nombre de la cola de mensajes de RabbitMQ."
+    },
+    {
+      "name": "rabbit.direct-exchange-name",
+      "type": "java.lang.String",
+      "description": "Tipo de intercambio de mensajes de RabbitMQ."
+    },
+    {
+      "name": "rabbit.routing-key",
+      "type": "java.lang.String",
+      "description": "Routing key de la cola de mensajes de RabbitMQ."
     }
   ]
 }

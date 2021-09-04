@@ -5,9 +5,11 @@ import com.tpdan.msproductos.model.dto.Pedido;
 import com.tpdan.msproductos.service.ProductoService;
 import com.tpdan.msproductos.service.RabbitService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class RabbitServiceImpl implements RabbitService {
     private final ProductoService productoService;
 
@@ -15,7 +17,7 @@ public class RabbitServiceImpl implements RabbitService {
         this.productoService = productoService;
     }
 
-    @RabbitListener(queues = "COLA_PEDIDOS")
+    @RabbitListener(queues = "${rabbit.nombre-cola}")
     public void recibirMensaje(Pedido pedido) throws BusinessRuleException {
         productoService.generarMovimientoStock(pedido);
     }
