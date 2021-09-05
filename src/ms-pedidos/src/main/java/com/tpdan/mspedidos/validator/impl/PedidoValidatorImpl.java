@@ -104,6 +104,7 @@ public class PedidoValidatorImpl implements PedidoValidator {
         if(pedidoOptional.isEmpty()){
             throw new PedidoInexistenteException();
         }
+        //TODO descomentar esto
 //        if(!pedidoOptional.get().getEstadoPedido().equals(EstadoPedido.NUEVO)){
 //            throw new PedidoNoModificableException();
 //        }
