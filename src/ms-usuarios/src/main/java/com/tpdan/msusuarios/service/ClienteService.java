@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClienteService {
-    List<Cliente> buscarTodos();
+    List<Cliente> buscarTodos(List<Integer> ids);
     Optional<Cliente> buscarClientePorId(Integer id);
     Optional<List<Cliente>> buscarCliente(Integer id, String cuit, String razonSocial, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline);
     Cliente buscarClientePorIdObra(Integer id);

@@ -19,7 +19,7 @@ public class RabbitServiceImpl implements RabbitService {
     }
 
     @RabbitListener(queues = "${rabbit.nombre-cola}")
-    public void recibirMensaje(List<DetallePedido> detallePedidoList) throws BusinessRuleException {
-        productoService.generarMovimientoStock(detallePedidoList);
+    public void recibirMensaje(Pedido pedido) throws BusinessRuleException {
+        productoService.generarMovimientoStock(pedido);
     }
 }

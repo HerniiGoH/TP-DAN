@@ -1,4 +1,4 @@
-package com.tpdan.mspagos.model;
+package com.tpdan.mspagos.model.dto;
 
 //esta clase es ReadOnly
 public class Cliente {

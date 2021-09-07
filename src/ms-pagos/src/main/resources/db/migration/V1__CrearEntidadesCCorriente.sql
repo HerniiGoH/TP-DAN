@@ -10,6 +10,7 @@ CREATE TABLE pago
     fecha_pago    DATETIME         NOT NULL,
     forma_pago_id INTEGER UNSIGNED NOT NULL,
     cliente_id    INTEGER UNSIGNED NOT NULL,
+    pedido_id     INTEGER UNSIGNED NOT NULL,
     CONSTRAINT fk_forma_pago_pago FOREIGN KEY (forma_pago_id) REFERENCES forma_pago (id)
 );
 

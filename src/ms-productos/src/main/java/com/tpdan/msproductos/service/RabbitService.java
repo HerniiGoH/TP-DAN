@@ -7,5 +7,5 @@ import com.tpdan.msproductos.model.dto.Pedido;
 import java.util.List;
 
 public interface RabbitService {
-    void recibirMensaje(List<DetallePedido> detallePedidoList) throws BusinessRuleException;
+    void recibirMensaje(Pedido pedido) throws BusinessRuleException;
 }

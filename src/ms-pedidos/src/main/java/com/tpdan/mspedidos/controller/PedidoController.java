@@ -20,8 +20,8 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pedido>> buscarTodos() throws BusinessRuleException {
-        return ResponseEntity.ok(pedidoService.buscarTodos());
+    public ResponseEntity<List<Pedido>> buscarTodos(@RequestParam(required = false)List<Integer>ids) throws BusinessRuleException {
+        return ResponseEntity.ok(pedidoService.buscarTodos(ids));
     }
 
     @GetMapping("/{id}")

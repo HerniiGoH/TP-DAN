@@ -47,8 +47,8 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<Pedido> buscarTodos() throws BusinessRuleException{
-        List<Pedido> pedidosEncontrados = pedidoRepository.findAll();
+    public List<Pedido> buscarTodos(List<Integer>ids) throws BusinessRuleException{
+        List<Pedido> pedidosEncontrados = ids==null?pedidoRepository.findAll():pedidoRepository.findAllById(ids);
 
         Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontrados);
         inicializarListaPedidos(pedidosEncontrados, clienteService.buscarObrasPorId(map.get("idsObra")), productoService.buscarProductosPorId(map.get("ids")));
@@ -174,7 +174,7 @@ public class PedidoServiceImpl implements PedidoService {
                 }
             }
             pedido.setEstadoPedido(EstadoPedido.ACEPTADO);
-            rabbitService.enviarMensaje(pedido.getDetallePedido());
+            rabbitService.enviarMensaje(pedido);
         }
         return pedidoRepository.save(pedido);
     }

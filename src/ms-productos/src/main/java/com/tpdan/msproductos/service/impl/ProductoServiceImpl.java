@@ -66,12 +66,12 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void generarMovimientoStock(List<DetallePedido> detallePedidoList) throws BusinessRuleException {
+    public void generarMovimientoStock(Pedido pedido) throws BusinessRuleException {
         try {
-            List<Producto> productos = movimientoStockValidador.validarCreacion(detallePedidoList);
+            List<Producto> productos = movimientoStockValidador.validarCreacion(pedido.getDetallePedido());
             List<MovimientosStock> movimientosStocks = new ArrayList<>();
 
-            for(DetallePedido dp : detallePedidoList){
+            for(DetallePedido dp : pedido.getDetallePedido()){
                 MovimientosStock movimientosStock = new MovimientosStock();
                 movimientosStock.setCantidadSalida(dp.getCantidad());
                 movimientosStock.setProducto(productos.stream().filter(p-> Objects.equals(p.getId(), dp.getProductoId())).findFirst().get());

@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "usuarios.buscar-cliente-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Usuarios para obtener un cliente por id."
+    },
+    {
+      "name": "usuarios.buscar-lista-clientes-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Usuarios para obtener una lista de clientes por id."
+    },
+    {
+      "name": "pedidos.buscar-pedido-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Pedidos para obtener un pedido por id."
+    },
+    {
+      "name": "pedidos.buscar-lista-pedidos-por-id",
+      "type": "java.lang.String",
+      "description": "URL al MS-Pedidos para obtener una lista de pedidos por id."
+    }
+  ]
+}

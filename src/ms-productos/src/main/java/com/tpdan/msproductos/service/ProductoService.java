@@ -15,5 +15,5 @@ public interface ProductoService {
     Producto actualizarProducto(Producto producto);
     Optional<List<Producto>> buscarProductos(String nombre, Integer stock, Double precio);
     List<Producto> buscarProductosSinStock(List<Integer> ids, List<Integer> cantidades);
-    void generarMovimientoStock(List<DetallePedido> detallePedidoList) throws BusinessRuleException;
+    void generarMovimientoStock(Pedido pedido) throws BusinessRuleException;
 }

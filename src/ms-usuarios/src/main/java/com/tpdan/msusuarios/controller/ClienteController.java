@@ -19,8 +19,8 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> buscarTodos(){
-        return ResponseEntity.ok(clienteService.buscarTodos());
+    public ResponseEntity<List<Cliente>> buscarTodos(@RequestParam(required = false) List<Integer>ids){
+        return ResponseEntity.ok(clienteService.buscarTodos(ids));
     }
 
     @GetMapping("/{id}")

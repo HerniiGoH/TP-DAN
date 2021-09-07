@@ -31,8 +31,8 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<Cliente> buscarTodos() {
-        return clienteRepository.findAll();
+    public List<Cliente> buscarTodos(List<Integer> ids) {
+       return ids==null?clienteRepository.findAll():clienteRepository.findAllById(ids);
     }
 
     @Override
