@@ -35,7 +35,7 @@ CREATE TABLE transferencia
     id                   INTEGER UNSIGNED NOT NULL PRIMARY KEY,
     cbu_origen           VARCHAR(22)      NOT NULL,
     cbu_destino          VARCHAR(22)      NOT NULL,
-    codigo_transferencia LONG             NOT NULL,
+    codigo_transferencia BIGINT             NOT NULL,
     CONSTRAINT fk_forma_pago_transferencia FOREIGN KEY (id) REFERENCES forma_pago (id)
 
 );

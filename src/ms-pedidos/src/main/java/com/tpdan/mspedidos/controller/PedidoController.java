@@ -3,6 +3,7 @@ package com.tpdan.mspedidos.controller;
 import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
+import com.tpdan.mspedidos.model.enumerations.EstadoPedido;
 import com.tpdan.mspedidos.service.PedidoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class PedidoController {
     }
 
     @GetMapping("/estado")
-    public ResponseEntity<List<Pedido>> buscarPedidosPorEstado(@RequestParam(name = "estado") String estado) throws BusinessRuleException {
+    public ResponseEntity<List<Pedido>> buscarPedidosPorEstado(@RequestParam(name = "estado") EstadoPedido estado) throws BusinessRuleException {
         return ResponseEntity.of(pedidoService.buscarPedidosPorEstado(estado));
     }
 

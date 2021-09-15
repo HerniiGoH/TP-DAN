@@ -3,6 +3,7 @@ package com.tpdan.mspedidos.service;
 import com.tpdan.mspedidos.exceptions.BusinessRuleException;
 import com.tpdan.mspedidos.model.DetallePedido;
 import com.tpdan.mspedidos.model.Pedido;
+import com.tpdan.mspedidos.model.enumerations.EstadoPedido;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ public interface PedidoService {
     Optional<Pedido> buscarPedidoPorId(Integer id) throws BusinessRuleException;
     Optional<List<Pedido>> buscarPedidosPorIdObra(Integer id) throws BusinessRuleException;
     Optional<List<Pedido>> buscarPedidosPorCliente(Integer id, String cuit) throws BusinessRuleException;
-    Optional<List<Pedido>> buscarPedidosPorEstado(String estado) throws BusinessRuleException;
+    Optional<List<Pedido>> buscarPedidosPorEstado(EstadoPedido estado) throws BusinessRuleException;
     Optional<DetallePedido> buscarDetallePedidoPorId(Integer idPedido, Integer id) throws BusinessRuleException;
     Pedido crearPedido(Pedido nuevoPedido) throws BusinessRuleException;
     DetallePedido crearDetallePedido(DetallePedido nuevoDetallePedido, Integer id) throws BusinessRuleException;

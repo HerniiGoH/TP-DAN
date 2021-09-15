@@ -98,7 +98,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Optional<List<Pedido>> buscarPedidosPorEstado(String estado) throws BusinessRuleException {
+    public Optional<List<Pedido>> buscarPedidosPorEstado(EstadoPedido estado) throws BusinessRuleException {
         Optional<List<Pedido>> pedidosEncontradosOpt = pedidoRepository.buscarPedidoPorEstado(estado);
             if(pedidosEncontradosOpt.isPresent()){
                 Map<String, List<Integer>> map = obtenerListasIds(pedidosEncontradosOpt.get());

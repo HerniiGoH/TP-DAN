@@ -23,8 +23,8 @@ public class PagoRest {
         return ResponseEntity.ok(pagoService.buscarTodos());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Pago>> buscarPagoPorCliente(Integer idCliente) throws BusinessRuleException {
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<Pago>> buscarPagoPorCliente(@PathVariable Integer idCliente) throws BusinessRuleException {
         return ResponseEntity.of(pagoService.buscarPorIdCliente(idCliente));
     }
 
