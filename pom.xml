@@ -14,6 +14,8 @@
         <module>src/ms-productos</module>
         <module>src/ms-pagos</module>
         <module>src/ms-bcra</module>
+        <module>src/proxy-service</module>
+        <module>src/service-discovery</module>
     </modules>
 
 </project>

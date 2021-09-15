@@ -1,0 +1,67 @@
+server:
+  port: ${PROXY_PORT:4069}
+
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: INFO
+
+spring:
+  application:
+    name: PROXY
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowCredentials: true
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "http://localhost:4420"
+              - "http://${FRONTEND_HOST:localhost}:${FRONTEND_PORT:4420}"
+            allowedMethods:
+              - POST
+              - GET
+              - OPTIONS
+      routes:
+        - id: BCRA
+          uri: http://${MS_BCRA_HOST:localhost}:${MS_BCRA_PORT:4044}/
+          predicates:
+            - Path=/api/bcra/**
+          allowed-origins:
+          filters:
+            - RewritePath=/api/bcra, /api
+        - id: PEDIDO
+          uri: lb://PEDIDO
+          predicates:
+            - Path=/api/pedido/**
+          filters:
+            - RewritePath=/api/pedido, /api
+        - id: PRODUCTO
+          uri: lb://PRODUCTO
+          predicates:
+            - Path=/api/producto/**
+          filters:
+            - RewritePath=/api/producto, /api
+        - id: CUENTA
+          uri: lb://PAGO
+          predicates:
+            - Path=/api/pago/**
+          filters:
+            - RewritePath=/api/pago, /api
+        - id: USUARIO
+          uri: lb://USUARIO
+          predicates:
+            - Path=/api/usuario/**
+          filters:
+            - RewritePath=/api/usuario, /api
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:4169}/eureka
