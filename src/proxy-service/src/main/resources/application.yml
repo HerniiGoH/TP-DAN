@@ -48,8 +48,8 @@ spring:
             - Path=/api/producto/**
           filters:
             - RewritePath=/api/producto, /api
-        - id: CUENTA
-          uri: lb://PAGO
+        - id: PAGOS
+          uri: lb://PAGOS
           predicates:
             - Path=/api/pago/**
           filters:

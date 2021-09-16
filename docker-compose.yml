@@ -9,7 +9,7 @@ services:
     env_file:
       - ./resources/database/config.env
     ports:
-      - '3306:3306'
+      - "3306:3306"
 
   rabbit-mq:
     container_name: rabbit-mq
@@ -114,8 +114,8 @@ services:
 #    ports:
 #      - "3000:3000"
 
-  # Microservicio de Proxy
-  ms-proxy:
+  # Servicio de Proxy
+  proxy-service:
     container_name: proxy-service
     build:
       context: ./src/proxy-service
@@ -125,8 +125,8 @@ services:
     ports:
       - "4069:4069"
 
-  # Microservicio de Service Discovery
-  ms-service-discovery:
+  # Servicio de Service Discovery
+  service-discovery:
     container_name: service-discovery
     build:
       context: ./src/service-discovery
