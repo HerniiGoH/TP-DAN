@@ -38,6 +38,8 @@ services:
     build:
       context: ./src/ms-bcra
       dockerfile: Dockerfile
+#    env_file:
+#      - config.env
     ports:
       - "4044:4044"
 
