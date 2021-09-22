@@ -17,7 +17,7 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Producto>> buscarTodos(@RequestParam(required = false) List<Integer>ids){
         return ResponseEntity.ok(productoService.buscarTodos(ids));
     }

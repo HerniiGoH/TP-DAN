@@ -18,7 +18,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Usuario>> buscarTodos(){
         return ResponseEntity.ok(usuarioService.buscarTodos());
     }
