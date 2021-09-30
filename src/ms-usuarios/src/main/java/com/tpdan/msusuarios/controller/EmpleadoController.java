@@ -17,7 +17,7 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Empleado>> buscarTodos(){
         return ResponseEntity.ok(this.empleadoService.buscarTodos());
     }

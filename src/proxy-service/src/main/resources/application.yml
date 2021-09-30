@@ -1,0 +1,101 @@
+server:
+  port: ${PROXY_PORT:4069}
+
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: INFO
+
+spring:
+  application:
+    name: PROXY
+  cloud:
+    gateway:
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedHeaders: "*"
+#            allowCredentials: true
+#            allowedOrigins:
+#              - "http://localhost:3000"
+#              - "http://localhost:4420"
+#              - "http://${FRONTEND_HOST:localhost}:${FRONTEND_PORT:4420}"
+#            allowedMethods:
+#              - POST
+#              - GET
+#              - OPTIONS
+      routes:
+        - id: BCRA
+          uri: http://${MS_BCRA_HOST:localhost}:${MS_BCRA_PORT:4044}/
+          predicates:
+            - Path=/api/bcra/**
+#            allowed-origins:
+#            filters:
+#              - RewritePath=/api/bcra, /api
+        - id: PEDIDO
+          uri: lb://PEDIDO
+          predicates:
+            - Path=/api/pedido/**
+#          filters:
+#            - RewritePath=/api/pedido, /api
+        - id: PRODUCTO
+          uri: lb://PRODUCTO
+          predicates:
+            - Path=/api/producto/**
+#          filters:
+#            - RewritePath=/api/producto, /api
+        - id: PAGOS
+          uri: lb://PAGOS
+          predicates:
+            - Path=/api/pago/**
+#          filters:
+#            - RewritePath=/api/pago, /api
+        - id: USUARIO
+          uri: lb://USUARIO
+          predicates:
+            - Path=/api/cliente/**, /api/obra/**, /api/usuario/**, /api/empleado/**
+#          filters:
+#            - RewritePath=/api/usuario, /api
+
+#zuul:
+#  routes:
+#    bcra:
+#      - serviceId: BCRA
+#      - path: /api/bcra/**
+#      - url: http://${BCRA_HOST:localhost}:${BCRA_PORT}:4044/
+#      - stripPrefix: false
+#    pedido:
+#      - serviceId: PEDIDO
+#      - path: /api/pedido/**
+#      - url: lb://PEDIDO
+#      - stripPrefix: false
+#    producto:
+#      - serviceId: PRODUCTO
+#      - path: /api/producto/**
+#      - url: lb://PRODUCTO
+#      - stripPrefix: false
+#    pago:
+#      - serviceId: PAGO
+#      - path: /api/pago/**
+#      - url: lb://PAGO
+#      - stripPrefix: false
+#    usuario:
+#      - serviceId: USUARIO
+#      - path: /api/cliente/**
+#      - url: lb://USUARIO
+#      - stripPrefix: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:4169}/eureka

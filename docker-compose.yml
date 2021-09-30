@@ -1,0 +1,212 @@
+version: '3.8'
+services:
+  database:
+    container_name: mysql
+    image: mysql
+    restart: always
+    volumes:
+      - ./resources/database/build-database.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - ./resources/database/config.env
+    ports:
+      - "3308:3306"
+
+  rabbit-mq:
+    container_name: rabbit-mq
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+#  keycloak:
+#    container_name: keycloak
+#    image: quay.io/keycloak/keycloak:latest
+#    volumes:
+#      - ./resources/keycloak:/opt/jboss/keycloak/imports
+#    command:
+#      - "-b 0.0.0.0 -Dkeycloak.import=/opt/jboss/keycloak/imports/realm-export.json"
+#    env_file:
+#      - ./resources/keycloak/config.env
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - database
+
+  # Microservicio BCRA
+  ms-bcra:
+    container_name: ms-bcra
+    build:
+      context: ./src/ms-bcra
+      dockerfile: Dockerfile
+#    env_file:
+#      - config.env
+    ports:
+      - "4044:4044"
+
+  # Microservicio de Cuenta Corriente
+  ms-cuenta:
+    container_name: ms-pagos
+    build:
+      context: ./src/ms-pagos
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4043:4043"
+    depends_on:
+      - database
+      - flyway-ms-pagos
+
+  # Microservicio de Pedidos
+  ms-pedido:
+    container_name: ms-pedido
+    build:
+      context: ./src/ms-pedidos
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4041:4041"
+    depends_on:
+      - database
+      - rabbit-mq
+      - flyway-ms-pedido
+
+  # Microservicio de Productos
+  ms-producto:
+    container_name: ms-producto
+    build:
+      context: ./src/ms-productos
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4042:4042"
+    depends_on:
+      - database
+      - flyway-ms-producto
+
+  # Microservicio de Usuarios
+  ms-usuario:
+    container_name: ms-usuario
+    build:
+      context: ./src/ms-usuarios
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4040:4040"
+    depends_on:
+      - database
+      - flyway-ms-usuario
+
+  # Prometheus
+#  prometheus:
+#    container_name: prometheus
+#    image: prom/prometheus
+#    volumes:
+#      - ./resources/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9090:9090"
+
+  # Grafana
+#  grafana:
+#    container_name: grafana
+#    image: grafana/grafana
+#    ports:
+#      - "3000:3000"
+
+  # Servicio de Proxy
+  proxy-service:
+    container_name: proxy-service
+    build:
+      context: ./src/proxy-service
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4069:4069"
+
+  # Servicio de Service Discovery
+  service-discovery:
+    container_name: service-discovery
+    build:
+      context: ./src/service-discovery
+      dockerfile: Dockerfile
+    env_file:
+      - config.env
+    ports:
+      - "4169:4169"
+
+  ## Servicios utilizados para las migraciones de Flyway ##
+
+  # Migración de Microservicio de Cuenta Corriente #
+  flyway-ms-pagos:
+    image: flyway/flyway
+    command: migrate
+    volumes:
+      - ./src/ms-pagos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
+      - ./src/ms-pagos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
+    depends_on:
+      - database
+
+  # Migración de Microservicio de Pedidos #
+  flyway-ms-pedido:
+    image: flyway/flyway
+    command: migrate
+    volumes:
+      - ./src/ms-pedidos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
+      - ./src/ms-pedidos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
+    depends_on:
+      - database
+
+  # Migración de Microservicio de Producto #
+  flyway-ms-producto:
+    image: flyway/flyway
+    command: migrate
+    volumes:
+      - ./src/ms-productos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
+      - ./src/ms-productos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
+    depends_on:
+      - database
+
+  # Migración de Microservicio de Usuarios #
+  flyway-ms-usuario:
+    image: flyway/flyway
+    command: migrate
+    volumes:
+      - ./src/ms-usuarios/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
+      - ./src/ms-usuarios/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
+    depends_on:
+      - database
+
+  # Consul
+#  consul:
+#    container_name: consul
+#    image: consul
+#    ports:
+#      - "8500:8500"
+#    depends_on:
+#      - database
+
+  # Frontend
+#  frontend:
+#    container_name: frontend
+#    build:
+#      context: ./src/frontend
+#      dockerfile: Dockerfile
+#    stdin_open: true
+#    ports:
+#      - "4420:4420"
+#    environment:
+#      - CHOKIDAR_USEPOLLING=true
+#    depends_on:
+#      - keycloak

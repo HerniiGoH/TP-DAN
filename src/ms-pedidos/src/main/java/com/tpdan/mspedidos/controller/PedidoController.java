@@ -20,7 +20,7 @@ public class PedidoController {
         this.pedidoService=pedidoService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Pedido>> buscarTodos(@RequestParam(required = false)List<Integer>ids) throws BusinessRuleException {
         return ResponseEntity.ok(pedidoService.buscarTodos(ids));
     }

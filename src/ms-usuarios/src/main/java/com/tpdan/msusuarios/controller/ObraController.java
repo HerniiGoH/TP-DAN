@@ -20,7 +20,7 @@ public class ObraController {
         this.obraService = obraService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Obra>> buscarTodas(@RequestParam(required = false) List<Integer> ids){
         return ResponseEntity.ok(obraService.buscarTodas(ids));
     }
