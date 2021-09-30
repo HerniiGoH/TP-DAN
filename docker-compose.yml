@@ -9,7 +9,7 @@ services:
     env_file:
       - ./resources/database/config.env
     ports:
-      - "3306:3306"
+      - "3308:3306"
 
   rabbit-mq:
     container_name: rabbit-mq
@@ -147,6 +147,8 @@ services:
     volumes:
       - ./src/ms-pagos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
       - ./src/ms-pagos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
     depends_on:
       - database
 
@@ -157,6 +159,8 @@ services:
     volumes:
       - ./src/ms-pedidos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
       - ./src/ms-pedidos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
     depends_on:
       - database
 
@@ -167,6 +171,8 @@ services:
     volumes:
       - ./src/ms-productos/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
       - ./src/ms-productos/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
     depends_on:
       - database
 
@@ -177,6 +183,8 @@ services:
     volumes:
       - ./src/ms-usuarios/src/main/resources/db/migration:/flyway/sql # Volumen de los archivos de migración
       - ./src/ms-usuarios/src/main/resources/db/config:/flyway/conf   # Volumen del archivo de configuración
+    env_file:
+      - config.env
     depends_on:
       - database
 
